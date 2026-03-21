@@ -1,2 +1,3 @@
-# lite-content-cms-fgf0
+# Lite Content Cms Fgf0
+
 A repository to test GitHub automation for issue management.
