@@ -1,0 +1,34 @@
+name: Close issues with wontfix label
+
+on:
+  issues:
+    types: [labeled, unlabeled]
+
+jobs:
+  close-wontfix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close issue
+        if: github.event.label.name == 'wontfix'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issueNumber = context.issue.number;
+            const repo = context.repo;
+            
+            // Check if issue is already closed
+            const { data: issue } = await github.rest.issues.get({
+              owner: repo.owner,
+              repo: repo.repo,
+              issue_number: issueNumber
+            });
+            
+            if (issue.state !== 'closed') {
+              await github.rest.issues.update({
+                owner: repo.owner,
+                repo: repo.repo,
+                issue_number: issueNumber,
+                state: 'closed'
+              });
+              console.log(`Closed issue #${issueNumber}`);
+            }
